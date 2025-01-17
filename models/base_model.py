@@ -1,36 +1,62 @@
+#!/usr/bin/python3
+"""
+This module defines a BaseModel class that
+defines all common attributes/methods for model classes
+"""
+
 import uuid
+import models
 from datetime import datetime
 
+
 class BaseModel:
-    """Base class for all models"""
-    
+    """
+    This is the base model class.
+    """
+
     def __init__(self, *args, **kwargs):
+        """
+        Initialize public instance attributes.
+        """
         if kwargs:
-            # If we are given keyword arguments, initialize with those.
             for key, value in kwargs.items():
-                if key != "__class__":
+                if key == 'created_at' or key == 'updated_at':
+                    value = datetime.fromisoformat(value)
+                if key != '__class__':
                     setattr(self, key, value)
         else:
-            # Otherwise, assign default values.
-            self.id = str(uuid.uuid4())  # Unique ID for each instance
-            self.created_at = datetime.now()  # Timestamp for when the object is created
-            self.updated_at = self.created_at  # Timestamp for the last time object was updated
-    
+            self.id = str(uuid.uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
+            models.storage.new(self)
+
     def save(self):
-        """Updates the updated_at attribute and saves the object"""
+        """
+        Updates the file storage with the new/updated information.
+        """
         self.updated_at = datetime.now()
-        storage.new(self)  # Save object to storage
-        storage.save()     # Save to file
-    
-    def __str__(self):
-        """Returns a string representation of the instance"""
-        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
-    
+        models.storage.save()
+
     def to_dict(self):
-        """Returns a dictionary representation of the instance"""
+        """
+        Convert the object to a dictionary representation.
+
+        Returns:
+            dict: A dictionary representation of the object.
+        """
+
         obj_dict = self.__dict__.copy()
         obj_dict["__class__"] = self.__class__.__name__
-        obj_dict["created_at"] = self.created_at.isoformat()
-        obj_dict["updated_at"] = self.updated_at.isoformat()
+        for key, value in self.__dict__.items():
+            if key == 'created_at' or key == 'updated_at':
+                value = value.isoformat()
+            obj_dict[key] = value
+
         return obj_dict
+
+    def __str__(self):
+        """
+        Returns a string representation of the BaseModel class.
+        """
+        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
 

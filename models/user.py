@@ -1,13 +1,17 @@
 #!/usr/bin/python3
-"""Defines the User class."""
+"""
+This module contains the User class (Blueprint for creating user objects).
+"""
+
 from models.base_model import BaseModel
 
 
 class User(BaseModel):
-    """Represents a user for the AirBnB clone.
+    """
+    This is the user class.
 
     Attributes:
-        email (str): The email of the user.
+        email (str): The email address of the user.
         password (str): The password of the user.
         first_name (str): The first name of the user.
         last_name (str): The last name of the user.
@@ -17,3 +21,8 @@ class User(BaseModel):
     first_name = ""
     last_name = ""
 
+    def __init__(self, *args, **kwargs):
+        """
+        Initialize public instance attributes.
+        """
+        super().__init__(*args, **kwargs)
