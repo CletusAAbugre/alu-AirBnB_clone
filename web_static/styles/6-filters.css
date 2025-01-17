@@ -41,7 +41,7 @@
 }
 
 .locations:hover .popover {
-    display: flex;
+    display: block;
     justify-content: start;
     flex-direction: column;
     z-index: 999;
@@ -58,6 +58,7 @@ ul {
     padding-bottom: 20px;
     padding: 0;
 }
+
 
 h2 {
     font-size: 16px;
