@@ -1,39 +1,32 @@
-#!/usr/bin/python3
-"""
-This module contains the Place class (Blueprint for creating Place objects).
-"""
+import unittest
+from models.place import Place
 
-from models.base_model import BaseModel
+class TestPlace(unittest.TestCase):
 
+    def test_init(self):
+        """Test for correct initialization of Place"""
+        place = Place()
+        self.assertTrue(hasattr(place, "city_id"))
+        self.assertTrue(hasattr(place, "user_id"))
+        self.assertTrue(hasattr(place, "name"))
+        self.assertEqual(place.city_id, "")
+        self.assertEqual(place.user_id, "")
+        self.assertEqual(place.name, "")
+        self.assertEqual(place.number_rooms, 0)
+        self.assertEqual(place.number_bathrooms, 0)
+        self.assertEqual(place.max_guest, 0)
+        self.assertEqual(place.price_by_night, 0)
+        self.assertEqual(place.latitude, 0.0)
+        self.assertEqual(place.longitude, 0.0)
+        self.assertEqual(place.amenity_ids, [])
 
-class Place(BaseModel):
-    """
-    This is the place class
+    def test_save(self):
+        """Test the save method of the Place class"""
+        place = Place()
+        place.save()
+        self.assertTrue(place.id)
+        self.assertTrue(place.updated_at)
 
-    Attributes:
-        city_id (str): The city id
-        user_id (str): The user id
-        name (str): The name of the place/house
-        description (str): The description of the place/house
-        number_rooms (int): The number of rooms in the place/house
-        number_bathrooms (int): The number of bathrooms in the place/house
-        max_guest (int): The max number of guests the place/house can hold
-        price_by_night (int): The price per night for the place/house
-        latitude (float): The latitude of the place/house
-        longitude (float): The longitude of the place/house
-        amenity_ids (list): A list of amenity(ids) in the place/house
-    """
-    city_id = ""
-    user_id = ""
-    name = ""
-    description = ""
-    number_rooms = 0
-    number_bathrooms = 0
-    max_guest = 0
-    price_by_night = 0
-    latitude = 0.0
-    longitude = 0.0
-    amenity_ids = []
+if __name__ == '__main__':
+    unittest.main()
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)

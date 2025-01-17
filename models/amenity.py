@@ -1,19 +1,21 @@
-#!/usr/bin/python3
-"""
-This module contains Amenity class (Blueprint for creating Amenity objects).
-"""
+import unittest
+from models.amenity import Amenity
 
-from models.base_model import BaseModel
+class TestAmenity(unittest.TestCase):
 
+    def test_init(self):
+        """Test for correct initialization of Amenity"""
+        amenity = Amenity()
+        self.assertTrue(hasattr(amenity, "name"))
+        self.assertEqual(amenity.name, "")
 
-class Amenity(BaseModel):
-    """
-    This is the amenity class
+    def test_save(self):
+        """Test the save method of the Amenity class"""
+        amenity = Amenity()
+        amenity.save()
+        self.assertTrue(amenity.id)
+        self.assertTrue(amenity.updated_at)
 
-    Attributes:
-        name (str): The name of the amenity
-    """
-    name = ""
+if __name__ == '__main__':
+    unittest.main()
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)

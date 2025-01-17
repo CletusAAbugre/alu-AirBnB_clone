@@ -1,22 +1,24 @@
-#!/usr/bin/python3
-"""
-This module contains the City class (Blueprint for creating City objects).
-"""
+import unittest
+from models.city import City
 
-from models.base_model import BaseModel
+class TestCity(unittest.TestCase):
+    
+    def test_init(self):
+        """Test for correct initialization of City"""
+        city = City()
+        self.assertTrue(hasattr(city, "state_id"))
+        self.assertTrue(hasattr(city, "name"))
+        self.assertEqual(city.state_id, "")
+        self.assertEqual(city.name, "")
 
+    def test_save(self):
+        """Test the save method of the City class"""
+        city = City()
+        city.save()
+        self.assertTrue(city.id)
+        self.assertTrue(city.updated_at)
 
-class City(BaseModel):
-    """
-    This is the city class
+if __name__ == '__main__':
+    unittest.main()
 
-    Attributes:
-        state_id (str): The state id
-        name (str): The name of the city
-    """
-    state_id = ""
-    name = ""
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
