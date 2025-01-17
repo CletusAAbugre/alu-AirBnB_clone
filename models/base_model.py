@@ -1,33 +1,36 @@
-import unittest
-from models.base_model import BaseModel
+import uuid
 from datetime import datetime
 
-class TestBaseModel(unittest.TestCase):
+class BaseModel:
+    """Base class for all models"""
     
-    def test_init(self):
-        """Test for correct initialization of BaseModel"""
-        obj = BaseModel()
-        self.assertTrue(hasattr(obj, "id"))
-        self.assertTrue(hasattr(obj, "created_at"))
-        self.assertTrue(hasattr(obj, "updated_at"))
+    def __init__(self, *args, **kwargs):
+        if kwargs:
+            # If we are given keyword arguments, initialize with those.
+            for key, value in kwargs.items():
+                if key != "__class__":
+                    setattr(self, key, value)
+        else:
+            # Otherwise, assign default values.
+            self.id = str(uuid.uuid4())  # Unique ID for each instance
+            self.created_at = datetime.now()  # Timestamp for when the object is created
+            self.updated_at = self.created_at  # Timestamp for the last time object was updated
     
-    def test_to_dict(self):
-        """Test if to_dict method returns a dictionary"""
-        obj = BaseModel()
-        obj_dict = obj.to_dict()
-        self.assertIsInstance(obj_dict, dict)
-        self.assertTrue("id" in obj_dict)
-        self.assertTrue("created_at" in obj_dict)
-        self.assertTrue("updated_at" in obj_dict)
+    def save(self):
+        """Updates the updated_at attribute and saves the object"""
+        self.updated_at = datetime.now()
+        storage.new(self)  # Save object to storage
+        storage.save()     # Save to file
     
-    def test_str(self):
-        """Test the string representation"""
-        obj = BaseModel()
-        obj_str = str(obj)
-        self.assertIn("[BaseModel]", obj_str)
-        self.assertIn(f"({obj.id})", obj_str)
-
-if __name__ == "__main__":
-    unittest.main()
-
+    def __str__(self):
+        """Returns a string representation of the instance"""
+        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
+    
+    def to_dict(self):
+        """Returns a dictionary representation of the instance"""
+        obj_dict = self.__dict__.copy()
+        obj_dict["__class__"] = self.__class__.__name__
+        obj_dict["created_at"] = self.created_at.isoformat()
+        obj_dict["updated_at"] = self.updated_at.isoformat()
+        return obj_dict
 
